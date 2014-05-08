@@ -1,0 +1,18 @@
+html {
+  font-family:sans-serif;
+}
+
+#barchart .bars {
+  margin: 5px 0px 5px 410px;
+  overflow:visible;
+}
+
+#barchart .text.title {
+  margin-left:-410px;
+}
+
+#year-selector .year {
+  margin:5px;
+  background:#444;
+  color:#fff;
+}
