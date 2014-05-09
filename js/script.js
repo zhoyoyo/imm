@@ -1,5 +1,8 @@
 d3.csv('./data.csv',function(csv_data) {
 
+  var settings = {
+    startingYear: 2013;
+  }
 
   var data = d3.nest()
     .key(function(d) {return d['title']})
@@ -21,7 +24,7 @@ d3.csv('./data.csv',function(csv_data) {
       .data(data)
     .enter().append('div')
     .attr('class',function(d) {return 'bars '+d.key.replace(/\s/g,'')})
-    .style('width',function(d) {return d.a2013*2+'px';})
+    .style('width',function(d) {return d['a' + settings.startingYear]*2+'px';})
     .style('height','30px')
     .style('background','#ccc')
       .append('div')
