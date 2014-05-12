@@ -1,22 +1,33 @@
 d3.csv('./data.csv',function(csv_data) {
 
+  function plucker(attribute) {
+    return function (obj) {
+      return obj[attribute];
+    }
+  }
+
+  var years = [2008, 2009, 2010, 2011, 2012, 2013];
   var settings = {
-    startingYear: 2013;
+    startingYear: 2013
   }
 
   var data = d3.nest()
-    .key(function(d) {return d['title']})
-    .key(function(d) {return d['service_center']})
+    .key(plucker('title'))
+    .key(plucker('service_center'))
     .entries(csv_data);
 
-  for (var i=0;i<data.length;i++) {
-    data[i].a2008 = (parseFloat(data[i].values[0].values[0].X2008)+parseFloat(data[i].values[1].values[0].X2008))/2;
-    data[i].a2009 = (parseFloat(data[i].values[0].values[0].X2009)+parseFloat(data[i].values[1].values[0].X2009))/2;
-    data[i].a2010 = (parseFloat(data[i].values[0].values[0].X2010)+parseFloat(data[i].values[1].values[0].X2010))/2;
-    data[i].a2011 = (parseFloat(data[i].values[0].values[0].X2011)+parseFloat(data[i].values[1].values[0].X2011))/2;
-    data[i].a2012 = (parseFloat(data[i].values[0].values[0].X2012)+parseFloat(data[i].values[1].values[0].X2012))/2;
-    data[i].a2013 = (parseFloat(data[i].values[0].values[0].X2013)+parseFloat(data[i].values[1].values[0].X2013))/2;
-  }
+  _.each(data, function (datum) {
+    _.each(years, function (year) {
+      var xYear = 'X' + year,
+          aYear = 'a' + year,
+          value0 = datum.values[0].values[0][xYear],
+          value1 = datum.values[1].values[0][xYear],
+          value0 = parseFloat(value0),
+          value1 = parseFloat(value1);
+
+      datum[aYear] = (value0 + value1) / 2;
+    });
+  });
 
 
   d3.select('#barchart')
@@ -24,7 +35,7 @@ d3.csv('./data.csv',function(csv_data) {
       .data(data)
     .enter().append('div')
     .attr('class',function(d) {return 'bars '+d.key.replace(/\s/g,'')})
-    .style('width',function(d) {return d['a' + settings.startingYear]*2+'px';})
+    .style('width',function(d) {return d['a'+settings.startingYear]*2+'px';})
     .style('height','30px')
     .style('background','#ccc')
       .append('div')
@@ -37,7 +48,7 @@ d3.csv('./data.csv',function(csv_data) {
 
   d3.select("#year-selector")
     .selectAll('div')
-      .data(['2008','2009','2010','2011','2012','2013'])
+      .data(years)
     .enter().append('div')
       .style({'width':'50px','height':'30px','display':'inline-block','cursor':'pointer'})
       .attr('class',function(d) {return 'year '+d; })
