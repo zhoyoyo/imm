@@ -1,10 +1,8 @@
-html {
+body,html {
   font-family:sans-serif;
-}
-
-#barchart .bars {
-  margin: 5px 0px 5px 410px;
-  overflow:visible;
+  width:100%;
+  padding:0;
+  margin:0;
 }
 
 #barchart .text.title {
@@ -15,4 +13,74 @@ html {
   margin:5px;
   background:#444;
   color:#fff;
+}
+
+#header {
+  width:100%;
+  background:#fff;
+  box-shadow: 0 2px 1px #999;
+  margin:0;
+  margin-top:0;
+  padding:0;
+  z-index:9999;
+  position:fixed;
+  height:200px;
+}
+
+#about {
+  width:300px;
+  float:left;
+  margin-top:200px;
+}
+
+#barchart {
+  padding-left:10px;
+  width:450px;
+  overflow:scroll;
+  max-height:700px;
+  background:#ffc;
+  float:left;
+  margin-top:200px;
+  position:relative;
+  z-index:2;
+}
+
+
+#linechart {
+  position:relative;
+  float:left;
+  height:300px;
+  width:400px;
+  margin-top:200px;
+  z-index:1;
+  margin-left:10px;
+}
+
+#bubblechart {
+  position:relative;
+  float:left;
+  height:300px;
+  width:400px;
+  z-index:1;
+  margin-left:10px;
+}
+
+
+
+
+.line {
+  fill:none;
+  stroke:#999;
+  stroke-width:1.5px;
+}
+
+
+.axis path {display:none;}
+.axis line {
+  shape-rendering:crispEdges;
+  stroke:#999;
+}
+
+text.theocc {
+  height:25px;
 }
