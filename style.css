@@ -28,14 +28,14 @@ body,html {
 }
 
 #about {
-  width:300px;
+  width:25%;
   float:left;
   margin-top:200px;
 }
 
 #barchart {
   padding-left:10px;
-  width:450px;
+  width:35%;
   overflow:scroll;
   max-height:700px;
   background:#ffc;
@@ -50,7 +50,7 @@ body,html {
   position:relative;
   float:left;
   height:300px;
-  width:400px;
+  width:35%;
   margin-top:200px;
   z-index:1;
   margin-left:10px;

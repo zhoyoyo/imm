@@ -102,7 +102,8 @@ d3.csv('./data.csv',function(csv_data) {
     barValue
       .enter().append('text')
       .attr('class',function(d) {return 'value '+d.keyAbb})
-      .attr('pointer-event','none')
+      .attr('pointer-events','none')
+      .attr('cursor','pointer')
       .attr('x',function(d) {
         return d['a'+thisyear]>7 ?
         (d['a'+thisyear]-2)*1.53+'px' :
@@ -162,21 +163,10 @@ d3.csv('./data.csv',function(csv_data) {
     .attr('x',0)
     .attr('y',15);
 
-
-var changeOcc = function(thisocc) {
-
-  var lineData = _.where(dataOriginal,{ key:thisocc })[0];
-      lineData.year = years;
-      lineData.wait = [lineData.a2008,lineData.a2009,lineData.a2010,lineData.a2011,lineData.a2012,lineData.a2013];
-
-  //update occupation name on the title
-  textsnap.text(lineData.key);
-
   //draw line
   var w=300,h=200,margin=20;
   var x = d3.time.scale().domain([2008,2013]).range([0+margin,w-margin]);
   var y = d3.scale.linear().range([h,0+margin]);
-      y.domain([0,d3.max(lineData.wait)]);
   var xAxis = d3.svg.axis()
     .ticks(6)
     .tickFormat(d3.format("0000"))
@@ -186,102 +176,215 @@ var changeOcc = function(thisocc) {
   var line = d3.svg.line()
       .x(function(d,i) {return x(years[i]);})
       .y(function(d) {return y(d);});
-
   svglines.append('g')
     .attr('class','x axis')
     .attr('transform','translate(0,'+ h +')')
     .call(xAxis);
-
   svglines.append('g')
     .attr('class','y axis')
-    .call(yAxis)
     .append('text')
     .attr('y',20)
     .text('Time (Days)');
+  var Line = svglines.append('path')
+    .attr('class','line');
 
-  svglines.append('path')
-    .datum(lineData.wait)
-    .attr('class','line')
-    .attr('d',line);
-
-
-  //add dots
-  svglines.selectAll('circle.dots')
-    .data(lineData.wait).enter()
-    .append('circle')
-    .attr('class','dots')
-    .attr('r',3.5)
-    .attr('cx',function(d,i) {return x(years[i]);})
-    .attr('cy',function(d,i) {return y(d);})
-    .attr('fill','orange');
-  //add dot-text
-  svglines.selectAll('text.text-dots')
-    .data(lineData.wait).enter()
-    .append('text')
-    .attr('class','text-dots')
-    .attr('x',function(d,i) {return x(years[i]);})
-    .attr('y',function(d,i) {return y(d)-5;})
-    .text(function(d) {return Math.round(d);})
-    .style('font-size','12px')
-    .style('text-anchor','middle');
-
-
-  ///##### DRAW BUBBLE CHART
-
+  //DRAW BUBBLE CHART
   var svgbubbles = d3.select('#bubblechart').append('svg').attr('width','400px').attr('height','260px');
 
-  var numberOfCenters = lineData.values.length;
-  var centerData = lineData.values;
-  _.each(centerData,function(x) {
-    if (x.values[0].X2013)
-    {x.average = (parseFloat(x.values[0].X2008) + parseFloat(x.values[0].X2009) + parseFloat(x.values[0].X2010) + parseFloat(x.values[0].X2011) + parseFloat(x.values[0].X2012) + parseFloat(x.values[0].X2013))/6;}
-    else {x.average = (parseFloat(x.values[0].X2008) + parseFloat(x.values[0].X2009) + parseFloat(x.values[0].X2010) + parseFloat(x.values[0].X2011) + parseFloat(x.values[0].X2012))/5;}
-  })
 
-  //add center name
-  svgbubbles.selectAll('text.center-name').data(centerData).enter()
-    .append('text')
-    .attr('class','center-name')
-    .attr('x',function(d,i) {
-      return 400/numberOfCenters*i+200/numberOfCenters;
-    })
-    .attr('y',0)
-    .attr('dy',15)
-    .text(function(d) {return d.key;})
-    .style('text-anchor','middle')
-    .style('font-size','14px');
-  //add center wait time
-  svgbubbles.selectAll('text.center-ptime').data(centerData).enter()
-    .append('text')
-    .attr('class','center-ptime')
-    .attr('x',function(d,i) {
-      return 400/numberOfCenters*i+200/numberOfCenters;
-    })
-    .attr('y',20)
-    .attr('dy',15)
-    .text(function(d) {return Math.round(d.average)+' Days';})
-    .style('text-anchor','middle')
-    .style('font-size','14px');
-  //add center circles
-  svgbubbles.selectAll('circle.center').data(centerData).enter()
-    .append('circle')
-    .attr('class','center-name')
-    .attr('cx',function(d,i) {
-      return 400/numberOfCenters*i+200/numberOfCenters;
-    })
-    .attr('cy',120)
-    .attr('r',function(d) {return 5*Math.sqrt(d.average);})
-    .style('fill',function(d) {
-      if (d.key=='California Service Center') {return 'orange';}
-      else if (d.key=='Vermont Service Center') {return 'green';}
-      else {return '#999999';}
-    })
-    .style('font-size','14px');
 
-}// end of changeOcc();
+  var changeOcc = function(thisocc) {
+
+    var lineData = _.where(dataOriginal,{ key:thisocc })[0];
+        lineData.year = years;
+        lineData.wait = [lineData.a2008,lineData.a2009,lineData.a2010,lineData.a2011,lineData.a2012,lineData.a2013];
+
+    d3.selectAll('.bars').style('fill','#cccccc');
+    d3.select('.bars.'+lineData.keyAbb).style('fill','#F79151').attr('class','.bars.selected'+lineData.keyAbb);
+
+    //update occupation name on the title
+    textsnap.text(lineData.key);
+
+    //update y axis
+    y.domain([0,d3.max(lineData.wait)]);
+    yAxis.scale(y).tickValues([0,parseFloat(d3.max(lineData.wait)/2).toFixed(0),parseFloat(d3.max(lineData.wait)).toFixed(0)]);
+    svglines.select('.y.axis').transition().duration(500).call(yAxis);
+
+    //update line
+    svglines.select('path.line')
+      .datum(lineData.wait)
+      .transition().duration(500)
+      .attr('d',line);
+
+    //add dots
+    var lineDots = svglines.selectAll('circle.dots')
+      .data(lineData.wait);
+    lineDots.transition().duration(500)
+      .attr('cy',function(d,i) {return y(d);});
+    lineDots
+      .enter()
+      .append('circle')
+      .attr('class','dots')
+      .attr('r',3.5)
+      .attr('cx',function(d,i) {return x(years[i]);})
+      .attr('cy',function(d,i) {return y(d);})
+      .attr('fill','orange');
+    lineDots
+      .exit()
+      .transition().duration(500)
+      .remove();
+
+    //add dot-text
+    var lineValue = svglines.selectAll('text.text-dots')
+      .data(lineData.wait);
+    lineValue.transition().duration(500)
+      .attr('y',function(d,i) {return y(d)-5;})
+      .text(function(d) {return Math.round(d);});
+    lineValue
+      .enter()
+      .append('text')
+      .attr('class','text-dots')
+      .attr('x',function(d,i) {return x(years[i]);})
+      .attr('y',function(d,i) {return y(d)-5;})
+      .text(function(d) {return Math.round(d);})
+      .style('font-size','12px')
+      .style('opacity',1)
+      .style('text-anchor','middle');
+    lineValue
+      .exit()
+      .transition().duration(500)
+      .style('opacity',0)
+      .remove();
+
+
+    ///##### DRAW BUBBLE CHART
+
+    var numberOfCenters = lineData.values.length;
+    var centerData = lineData.values;
+    _.each(centerData,function(x) {
+      if (x.values[0].X2013)
+      {x.average = (parseFloat(x.values[0].X2008) + parseFloat(x.values[0].X2009) + parseFloat(x.values[0].X2010) + parseFloat(x.values[0].X2011) + parseFloat(x.values[0].X2012) + parseFloat(x.values[0].X2013))/6;}
+      else {x.average = (parseFloat(x.values[0].X2008) + parseFloat(x.values[0].X2009) + parseFloat(x.values[0].X2010) + parseFloat(x.values[0].X2011) + parseFloat(x.values[0].X2012))/5;}
+    })
+
+    //add center name
+    var centerName =
+    svgbubbles.selectAll('text.center-name').data(centerData);
+    centerName
+      .transition().duration(750)
+      .attr('x',function(d,i) {
+        return 400/numberOfCenters*i+180/numberOfCenters;
+      })
+      .text(function(d) {return d.key;});
+    centerName
+      .enter()
+      .append('text')
+      .attr('class','center-name')
+      .attr('x',function(d,i) {
+        return 400/numberOfCenters*i+180/numberOfCenters;
+      })
+      .attr('y',0)
+      .attr('dy',15)
+      .text(function(d) {return d.key;})
+      .style('text-anchor','middle')
+      .style('font-size','12px')
+      .style('fill-opacity',1);
+    centerName
+      .exit()
+      .transition().duration(500)
+      .style('fill-opacity',0)
+      .remove();
+
+
+    //add center wait time
+    var waitTime = svgbubbles.selectAll('text.center-ptime').data(centerData);
+    waitTime
+      .transition().duration(750)
+      .attr('x',function(d,i) {
+        return 400/numberOfCenters*i+180/numberOfCenters;
+      })
+      .text(function(d) {return Math.round(d.average)+' Days';});
+    waitTime
+      .enter()
+      .append('text')
+      .attr('class','center-ptime')
+      .attr('x',function(d,i) {
+        return 400/numberOfCenters*i+180/numberOfCenters;
+      })
+      .attr('y',20)
+      .attr('dy',15)
+      .text(function(d) {return Math.round(d.average)+' Days';})
+      .style('text-anchor','middle')
+      .style('font-size','14px')
+      .style('fill-opacity',1);
+    waitTime
+      .exit()
+      .transition().duration(500)
+      .style('fill-opacity',0)
+      .remove();
+
+    //add center circles
+    var bubbles = svgbubbles.selectAll('circle.center').data(centerData);
+    bubbles
+      .transition().duration(750)
+      .attr('cx',function(d,i) {
+        return 400/numberOfCenters*i+180/numberOfCenters;
+      })
+      .attr('r',function(d) {
+        return numberOfCenters==4? 3*Math.sqrt(d.average):5*Math.sqrt(d.average);})
+      .style('fill',function(d) {
+        if (d.key=='California S.C.') {return 'orange';}
+        else if (d.key=='Vermont S.C.') {return 'green';}
+        else if (d.key=='Nebraska S.C.') {return 'steelblue';}
+        else {return '#999999';}
+      });
+    bubbles
+      .enter()
+      .append('circle')
+      .attr('class','center')
+      .attr('cx',function(d,i) {
+        return 400/numberOfCenters*i+180/numberOfCenters;
+      })
+      .attr('cy',120)
+      .attr('r',function(d) {
+        return numberOfCenters==4? 3*Math.sqrt(d.average):5*Math.sqrt(d.average);})
+      .style('fill',function(d) {
+        if (d.key=='California S.C.') {return 'orange';}
+        else if (d.key=='Vermont S.C.') {return 'green';}
+        else if (d.key=='Nebraska S.C.') {return 'steelblue';}
+        else {return '#999999';}
+      })
+      .style('fill-opacity',1);
+
+    bubbles
+      .exit()
+      .transition().duration(500)
+      .attr('r',0)
+      .style('fill-opacity',0)
+      .remove();
+
+  }// end of changeOcc();
+
+
+  //Add Display Text
+  d3.select('#big-display')
+    .append('div').attr('class','ptime')
+    .style('display','inline')
+    .text('sometext');
+    
+  var changeDisplay = function(year,occ) {
+    var pData = _.where(dataOriginal,{ key:occ })[0];
+    var text = pData['a'+year];
+    d3.select('div.ptime').text(text+' Days');
+  }
+
+
+
+
 
 changeYear(settings.startingYear);
 changeOcc(settings.startingOcc);
+changeDisplay(settings.startingYear,settings.startingOcc);
 
 
 
