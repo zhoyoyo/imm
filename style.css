@@ -1,5 +1,5 @@
 body,html {
-  font-family:sans-serif;
+  font-family:'Open Sans', sans-serif;
   width:100%;
   padding:0;
   margin:0;
@@ -10,9 +10,8 @@ body,html {
 }
 
 #year-selector .year {
-  margin:5px;
-  background:#444;
-  color:#fff;
+  text-align:center;
+  margin-top:10px;
 }
 
 #header {
@@ -21,26 +20,26 @@ body,html {
   box-shadow: 0 2px 1px #999;
   margin:0;
   margin-top:0;
-  padding:0;
+  padding:20px;
   z-index:9999;
   position:fixed;
-  height:200px;
+  height:60px;
 }
 
 #about {
   width:25%;
   float:left;
-  margin-top:200px;
+  margin-top:100px;
 }
 
 #barchart {
   padding-left:10px;
-  width:35%;
+  width:38%;
   overflow:scroll;
   max-height:700px;
   background:#ffc;
   float:left;
-  margin-top:200px;
+  margin-top:100px;
   position:relative;
   z-index:2;
 }
@@ -50,8 +49,8 @@ body,html {
   position:relative;
   float:left;
   height:300px;
-  width:35%;
-  margin-top:200px;
+  width:32%;
+  margin-top:100px;
   z-index:1;
   margin-left:10px;
 }
@@ -83,4 +82,55 @@ body,html {
 
 text.theocc {
   height:25px;
+}
+
+#title {
+  float:left;
+  height:60px;
+  margin-left:10px;
+}
+
+h1 {
+  font-size:28px;
+  margin:0;
+  padding:0;
+  font-family:'Droid Serif', serif;
+  font-weight:400;
+  color:#414042;
+}
+
+h3 {
+  font-size:13px;
+  margin:0;
+  padding:0;
+  font-family:'Droid Serif', serif;
+  font-weight:400;
+  color:#414042;
+  padding-top:3px;
+}
+
+#selector {
+  float:left;
+  height:60px;
+  color:#808080;
+  font-size:13px;
+}
+
+.arrow {
+  float:left;
+  height:60px;
+  width:50px;
+  text-align:center;
+}
+
+#big-display {
+  color:#58595B;
+  font-weight:700;
+  font-size:17px;
+}
+
+#big-display .ptime {
+  font-size:24px;
+  color:#F79151;
+  font-weight:700;
 }

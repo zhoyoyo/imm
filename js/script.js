@@ -1,3 +1,5 @@
+$(function() {
+
 d3.csv('./data.csv',function(csv_data) {
 
   function plucker(attribute) {
@@ -10,7 +12,7 @@ d3.csv('./data.csv',function(csv_data) {
   var ayears = ['a2008','a2009','a2010','a2011','a2012','a2013'];
   var settings = {
     startingYear: 2013,
-    startingOcc: "Accountants, Auditors, And Related Jobs"
+    startingOcc: "Accountants, Auditors and Related Jobs"
   }
 
 //read and process data
@@ -38,7 +40,7 @@ d3.csv('./data.csv',function(csv_data) {
 
 
   var changeYear = function(thisyear) {
-
+    settings.startingYear = thisyear;
     //update data of the new order
     var data = dataOriginal
       .sort(function(a,b) {
@@ -72,6 +74,10 @@ d3.csv('./data.csv',function(csv_data) {
       })
       .on('click',function(d) {
         changeOcc(d.key);
+        changeDisplay(settings.startingYear,d.key);
+        //change the dropdown display
+        d3.select('select').node().value = d.key;
+
       });
 
     bars
@@ -194,13 +200,13 @@ d3.csv('./data.csv',function(csv_data) {
 
 
   var changeOcc = function(thisocc) {
-
+    settings.startingOcc = thisocc;
     var lineData = _.where(dataOriginal,{ key:thisocc })[0];
         lineData.year = years;
         lineData.wait = [lineData.a2008,lineData.a2009,lineData.a2010,lineData.a2011,lineData.a2012,lineData.a2013];
 
-    d3.selectAll('.bars').style('fill','#cccccc');
-    d3.select('.bars.'+lineData.keyAbb).style('fill','#F79151').attr('class','.bars.selected'+lineData.keyAbb);
+//    d3.selectAll('.bars').style('fill','#cccccc');
+//    d3.select('.bars.'+lineData.keyAbb).style('fill','#F79151').attr('class','.bars.selected'+lineData.keyAbb);
 
     //update occupation name on the title
     textsnap.text(lineData.key);
@@ -369,9 +375,9 @@ d3.csv('./data.csv',function(csv_data) {
   //Add Display Text
   d3.select('#big-display')
     .append('div').attr('class','ptime')
-    .style('display','inline')
+    .style('display','block')
     .text('sometext');
-    
+
   var changeDisplay = function(year,occ) {
     var pData = _.where(dataOriginal,{ key:occ })[0];
     var text = pData['a'+year];
@@ -379,24 +385,53 @@ d3.csv('./data.csv',function(csv_data) {
   }
 
 
+  //fill dropdown menu
+  d3.select('#occ-selector')
+    .append('select')
+    .attr('class','select-menu')
+    .selectAll('option')
+    .data(dataOriginal)
+    .enter()
+    .append('option')
+    .text(function(d) {return d.key;});
 
+  d3.select('select').on('change',function() {
+    var number=this.selectedIndex;
 
+    var dataOrdered = dataOriginal
+      .sort(function(a,b) {
+        return d3.ascending(a.key,b.key);
+      });
 
-changeYear(settings.startingYear);
-changeOcc(settings.startingOcc);
-changeDisplay(settings.startingYear,settings.startingOcc);
+    changeOcc(dataOrdered[number].key);
+    changeDisplay(settings.startingYear,dataOrdered[number].key);
 
+  })
 
 
   d3.select("#year-selector")
     .selectAll('div')
-      .data(years)
+    .data(years)
     .enter().append('div')
-      .style({'width':'50px','height':'30px','display':'inline-block','cursor':'pointer'})
-      .attr('class',function(d) {return 'year '+d; })
-      .text(function(d) {return d;})
-      .on('click',function(d) {
-        changeYear(d);
-      });
+    .style({'width':'50px','height':'20px','display':'inline-block','cursor':'pointer'})
+    .attr('class',function(d) {return 'year '+d; })
+    .text(function(d) {return d;})
+    .style('font-size','13px')
+    .style('color','#808080')
+    .on('click',function(d) {
+      d3.selectAll('.year').style('background','white');
+      d3.select(this).style('background','#999');
+      changeYear(d);
+      changeDisplay(d,settings.startingOcc);
+    });
+
+  //intial graphics
+  changeYear(settings.startingYear);
+  changeOcc(settings.startingOcc);
+  changeDisplay(settings.startingYear,settings.startingOcc);
+
 
 })  //end of D3
+
+
+}) //end of jquery
