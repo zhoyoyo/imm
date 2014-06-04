@@ -3,10 +3,7 @@ body,html {
   width:100%;
   padding:0;
   margin:0;
-}
-
-#barchart .text.title {
-  margin-left:-410px;
+  background:#F7F5F4;
 }
 
 #year-selector .year {
@@ -24,20 +21,30 @@ body,html {
   z-index:9999;
   position:fixed;
   height:60px;
+  background:#F7F5F4;
 }
 
 #about {
-  width:25%;
+  width:24%;
   float:left;
   margin-top:100px;
+  padding-left:30px;
+  padding-right:20px;
+  padding-top:20px;
 }
+
+
+#about p {
+  font-size:13px;
+  color:#414042;
+  line-height:20px;
+}
+
 
 #barchart {
   padding-left:10px;
   width:38%;
   overflow:scroll;
-  max-height:700px;
-  background:#ffc;
   float:left;
   margin-top:100px;
   position:relative;
@@ -46,22 +53,31 @@ body,html {
 
 
 #linechart {
+  font-size:14px;
+  color:#414042;
+  border:1px dashed #ccc;
   position:relative;
   float:left;
   height:300px;
   width:32%;
   margin-top:100px;
   z-index:1;
-  margin-left:10px;
+  padding-left:10px;
+  background-color:white;
 }
 
 #bubblechart {
+  font-size:14px;
+  color:#414042;
+  margin-top:20px;
   position:relative;
   float:left;
   height:300px;
-  width:400px;
+  width:32%;
   z-index:1;
   margin-left:10px;
+  background-color:white;
+  border:1px dashed #ccc;
 }
 
 
@@ -109,11 +125,19 @@ h3 {
   padding-top:3px;
 }
 
+h5 {
+  font-size:20px;
+  color:#939598;
+  font-weight:700;
+  margin:0;
+  padding:0;
+}
+
 #selector {
   float:left;
   height:60px;
   color:#808080;
-  font-size:13px;
+  font-size:14px;
 }
 
 .arrow {
@@ -133,4 +157,8 @@ h3 {
   font-size:24px;
   color:#F79151;
   font-weight:700;
+}
+
+.years {
+  display:inline;
 }

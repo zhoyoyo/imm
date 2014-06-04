@@ -1,5 +1,7 @@
 $(function() {
 
+  $('#barchart').css({'max-height': $(window).height()-100 + 'px'});
+
 d3.csv('./data.csv',function(csv_data) {
 
   function plucker(attribute) {
@@ -147,8 +149,9 @@ d3.csv('./data.csv',function(csv_data) {
       .attr('x',0)
       .attr('y',function(d,i) {return 27+i*50})
       .attr('text-anchor','start')
-      .style('font-size','14px')
+      .style('font-size','13px')
       .style('fill-opacity',1)
+      .style('fill','#414042')
       .text(function(d) {return d.key;});
     //exit
     barLabel
@@ -409,7 +412,7 @@ d3.csv('./data.csv',function(csv_data) {
   })
 
 
-  d3.select("#year-selector")
+  d3.select("#year-selector").select('.years')
     .selectAll('div')
     .data(years)
     .enter().append('div')
@@ -419,8 +422,10 @@ d3.csv('./data.csv',function(csv_data) {
     .style('font-size','13px')
     .style('color','#808080')
     .on('click',function(d) {
-      d3.selectAll('.year').style('background','white');
+      d3.selectAll('.year').style('background','#F7F5F4');
+      d3.selectAll('.year').style('color','#808080');
       d3.select(this).style('background','#999');
+      d3.select(this).style('color','white');
       changeYear(d);
       changeDisplay(d,settings.startingOcc);
     });
