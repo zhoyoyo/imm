@@ -1,8 +1,11 @@
 $(function() {
 
-  $('#barchart').css({'max-height': $(window).height()-100 + 'px'});
-
+  $('#barchart').css({'max-height': $(window).height()-120 + 'px'});
+  $('#about').css({'height':$(window).height()-120+'px'});
+  var winW = $(window).width();
 d3.csv('./data.csv',function(csv_data) {
+
+
 
   function plucker(attribute) {
     return function (obj) {
@@ -37,12 +40,14 @@ d3.csv('./data.csv',function(csv_data) {
     datum.keyAbb = datum.key.replace(/\s/g,'');
   });
 
-///Draw bar grahp
+///Draw bar graph
   var svgbars = d3.select('#barchart').append('svg').attr('width','100%').attr('height','5450px');
+  var maxWidth = winW*36/100-40;
 
 
   var changeYear = function(thisyear) {
     settings.startingYear = thisyear;
+    d3.select('.year-bar').text(thisyear);
     //update data of the new order
     var data = dataOriginal
       .sort(function(a,b) {
@@ -57,7 +62,10 @@ d3.csv('./data.csv',function(csv_data) {
       .transition().duration(1000)
       .delay(function(d,i) {return i*400/25;})
       .attr('y',function(d,i) {return 30+i*50;})
-      .attr('width',function(d) {return d['a'+thisyear]*1.53+'px';});
+      .attr('width',function(d) {
+        var w = d['a'+thisyear]*1.53;
+        return w > maxWidth ? (maxWidth +'px') : (w +'px');
+      });
 
     bars
       .enter().append('rect')
@@ -65,7 +73,10 @@ d3.csv('./data.csv',function(csv_data) {
       .attr('x',0)
       .attr('y',function(d,i) {return 30+i*50;})
       .attr('height','28px')
-      .attr('width',function(d) {return d['a'+thisyear]*1.53+'px';})
+      .attr('width',function(d) {
+        var w = d['a'+thisyear]*1.53;
+        return w > maxWidth ? (maxWidth +'px') : (w +'px');
+      })
       .attr('cursor','pointer')
       .style('fill','#cccccc')
       .on('mouseover',function(d) {
@@ -78,8 +89,8 @@ d3.csv('./data.csv',function(csv_data) {
         changeOcc(d.key);
         changeDisplay(settings.startingYear,d.key);
         //change the dropdown display
-        d3.select('select').node().value = d.key;
-
+//        d3.select('select').node().value = d.key;
+        $('.custom-combobox-input').val(d.key);
       });
 
     bars
@@ -96,13 +107,14 @@ d3.csv('./data.csv',function(csv_data) {
       .transition().duration(1000)
       .delay(function(d,i) {return i*400/25;})
       .attr('x',function(d) {
-        return d['a'+thisyear]>10 ?
-        (d['a'+thisyear]-2)*1.53+'px' :
-        (d['a'+thisyear]+2)*1.53+'px'
+          var w = d['a'+thisyear]*1.53;
+          if (w>maxWidth) {return (maxWidth-3) + 'px';}
+          else if (d['a'+thisyear]>13) {return (w-3)+'px';}
+          else {return (w+3) +'px';}
       })
       .attr('y',function(d,i) {return 20+i*50})
       .attr('text-anchor',function(d){
-        return d['a'+thisyear]>7? 'end':'start'
+        return d['a'+thisyear]>13? 'end':'start'
       })
       .style('fill-opacity',1)
       .text(function(d) {return Math.round(d['a'+thisyear]);});
@@ -113,16 +125,17 @@ d3.csv('./data.csv',function(csv_data) {
       .attr('pointer-events','none')
       .attr('cursor','pointer')
       .attr('x',function(d) {
-        return d['a'+thisyear]>7 ?
-        (d['a'+thisyear]-2)*1.53+'px' :
-        (d['a'+thisyear]+2)*1.53+'px'
+        var w = d['a'+thisyear]*1.53;
+        if (w>maxWidth) {return (maxWidth-3) + 'px';}
+        else if (d['a'+thisyear]>13) {return (w-3)+'px';}
+        else {return (w+3) +'px';}
       })
       .attr('y',function(d,i) {return 20+i*50})
       .attr('text-anchor',function(d){
-        return d['a'+thisyear]>7? 'end':'start'
+        return d['a'+thisyear]>13? 'end':'start'
       })
       .attr('dy',30)
-      .style('font-size','14px')
+      .style('font-size','13px')
       .text(function(d) {return Math.round(d['a'+thisyear]);});
     //exit
     barValue
@@ -164,18 +177,28 @@ d3.csv('./data.csv',function(csv_data) {
 
 
   /// DRAW LINE CHART
-  var svglines = d3.select('#linechart').append('svg').attr('width','340px').attr('height','260px');
+  var svglines = d3.select('#linechart').append('svg').attr('width','350px').attr('height','240px');
   //add occupation name on the title
   var textsnap = d3.select('#theocc').append('svg').attr('width','450px').attr('height','25px')
     .append('text')
     .attr('class','theocc')
+    .style('fill','#414042')
     .attr('x',0)
     .attr('y',15);
 
+var textsnap2 = d3.selectAll('#theocc2').append('svg').attr('width','450px').attr('height','25px')
+  .append('text')
+  .attr('class','theocc')
+  .style('fill','#414042')
+  .attr('x',0)
+  .attr('y',15);
+
+
+
   //draw line
-  var w=300,h=200,margin=20;
+  var w=320,h=220,margin=20;
   var x = d3.time.scale().domain([2008,2013]).range([0+margin,w-margin]);
-  var y = d3.scale.linear().range([h,0+margin]);
+  var y = d3.scale.linear().range([h,margin*2]);
   var xAxis = d3.svg.axis()
     .ticks(6)
     .tickFormat(d3.format("0000"))
@@ -193,12 +216,15 @@ d3.csv('./data.csv',function(csv_data) {
     .attr('class','y axis')
     .append('text')
     .attr('y',20)
+    .style('fill','#999999')
+    .style('font-weight',700)
+    .style('font-size','13px')
     .text('Time (Days)');
   var Line = svglines.append('path')
     .attr('class','line');
 
   //DRAW BUBBLE CHART
-  var svgbubbles = d3.select('#bubblechart').append('svg').attr('width','400px').attr('height','260px');
+  var svgbubbles = d3.select('#bubblechart').append('svg').attr('width','340px').attr('height','260px');
 
 
 
@@ -213,6 +239,7 @@ d3.csv('./data.csv',function(csv_data) {
 
     //update occupation name on the title
     textsnap.text(lineData.key);
+    textsnap2.text(lineData.key);
 
     //update y axis
     y.domain([0,d3.max(lineData.wait)]);
@@ -237,7 +264,7 @@ d3.csv('./data.csv',function(csv_data) {
       .attr('r',3.5)
       .attr('cx',function(d,i) {return x(years[i]);})
       .attr('cy',function(d,i) {return y(d);})
-      .attr('fill','orange');
+      .attr('fill','#F79151');
     lineDots
       .exit()
       .transition().duration(500)
@@ -282,7 +309,7 @@ d3.csv('./data.csv',function(csv_data) {
     centerName
       .transition().duration(750)
       .attr('x',function(d,i) {
-        return 400/numberOfCenters*i+180/numberOfCenters;
+        return 340/numberOfCenters*i+180/numberOfCenters;
       })
       .text(function(d) {return d.key;});
     centerName
@@ -290,12 +317,13 @@ d3.csv('./data.csv',function(csv_data) {
       .append('text')
       .attr('class','center-name')
       .attr('x',function(d,i) {
-        return 400/numberOfCenters*i+180/numberOfCenters;
+        return 340/numberOfCenters*i+180/numberOfCenters;
       })
-      .attr('y',0)
-      .attr('dy',15)
+      .attr('y',20)
       .text(function(d) {return d.key;})
       .style('text-anchor','middle')
+      .style('fill','#999')
+      .style('font-weight','700')
       .style('font-size','12px')
       .style('fill-opacity',1);
     centerName
@@ -310,7 +338,7 @@ d3.csv('./data.csv',function(csv_data) {
     waitTime
       .transition().duration(750)
       .attr('x',function(d,i) {
-        return 400/numberOfCenters*i+180/numberOfCenters;
+        return 340/numberOfCenters*i+180/numberOfCenters;
       })
       .text(function(d) {return Math.round(d.average)+' Days';});
     waitTime
@@ -318,13 +346,13 @@ d3.csv('./data.csv',function(csv_data) {
       .append('text')
       .attr('class','center-ptime')
       .attr('x',function(d,i) {
-        return 400/numberOfCenters*i+180/numberOfCenters;
+        return 340/numberOfCenters*i+180/numberOfCenters;
       })
-      .attr('y',20)
-      .attr('dy',15)
+      .attr('y',40)
       .text(function(d) {return Math.round(d.average)+' Days';})
       .style('text-anchor','middle')
-      .style('font-size','14px')
+      .style('fill','#414042')
+      .style('font-size','13px')
       .style('fill-opacity',1);
     waitTime
       .exit()
@@ -337,12 +365,15 @@ d3.csv('./data.csv',function(csv_data) {
     bubbles
       .transition().duration(750)
       .attr('cx',function(d,i) {
-        return 400/numberOfCenters*i+180/numberOfCenters;
+        return 340/numberOfCenters*i+180/numberOfCenters;
       })
       .attr('r',function(d) {
-        return numberOfCenters==4? 3*Math.sqrt(d.average):5*Math.sqrt(d.average);})
+        if (numberOfCenters == 2) {return Math.sqrt(d.average)*4;}
+        else if (numberOfCenters == 3) {return Math.sqrt(d.average)*4;}
+        else {return 3*Math.sqrt(d.average);}
+      })
       .style('fill',function(d) {
-        if (d.key=='California S.C.') {return 'orange';}
+        if (d.key=='California S.C.') {return '#F79151';}
         else if (d.key=='Vermont S.C.') {return 'green';}
         else if (d.key=='Nebraska S.C.') {return 'steelblue';}
         else {return '#999999';}
@@ -352,13 +383,16 @@ d3.csv('./data.csv',function(csv_data) {
       .append('circle')
       .attr('class','center')
       .attr('cx',function(d,i) {
-        return 400/numberOfCenters*i+180/numberOfCenters;
+        return 340/numberOfCenters*i+180/numberOfCenters;
       })
-      .attr('cy',120)
+      .attr('cy',100)
       .attr('r',function(d) {
-        return numberOfCenters==4? 3*Math.sqrt(d.average):5*Math.sqrt(d.average);})
+        if (numberOfCenters == 2) {return Math.sqrt(d.average)*4;}
+        else if (numberOfCenters == 3) {return Math.sqrt(d.average)*4;}
+        else {return 3*Math.sqrt(d.average);}
+      })
       .style('fill',function(d) {
-        if (d.key=='California S.C.') {return 'orange';}
+        if (d.key=='California S.C.') {return '#F79151';}
         else if (d.key=='Vermont S.C.') {return 'green';}
         else if (d.key=='Nebraska S.C.') {return 'steelblue';}
         else {return '#999999';}
@@ -412,6 +446,7 @@ d3.csv('./data.csv',function(csv_data) {
   })
 
 
+
   d3.select("#year-selector").select('.years')
     .selectAll('div')
     .data(years)
@@ -420,10 +455,16 @@ d3.csv('./data.csv',function(csv_data) {
     .attr('class',function(d) {return 'year '+d; })
     .text(function(d) {return d;})
     .style('font-size','13px')
-    .style('color','#808080')
+    .style('color','#414042')
+    .style('background',function(d) {
+      return d == 2013? '#999' : "#F7F5F4";
+    })
+    .style('color',function(d) {
+      return d==2013? 'white' : '#414042';
+    })
     .on('click',function(d) {
       d3.selectAll('.year').style('background','#F7F5F4');
-      d3.selectAll('.year').style('color','#808080');
+      d3.selectAll('.year').style('color','#414042');
       d3.select(this).style('background','#999');
       d3.select(this).style('color','white');
       changeYear(d);
@@ -435,6 +476,41 @@ d3.csv('./data.csv',function(csv_data) {
   changeOcc(settings.startingOcc);
   changeDisplay(settings.startingYear,settings.startingOcc);
 
+  function initCombobox() {
+      // Setup combobox to replace select
+      $('select.select-menu').combobox({
+          onSelect: onchange,
+          select: function (event, ui) {
+              // Trying to suppress Enter button triggering submission
+              event.preventDefault();
+              event.stopPropagation();
+              return false;
+          }
+      });
+
+      // When you focus on the input, select everything
+      $('.custom-combobox-input').on('focus', function () {
+          $(this).select();
+      })
+  }
+
+
+  // result of selecting an occupation from dropdown
+  var onchange = function() {
+    var number=d3.select('select').node().selectedIndex;
+    var dataOrdered = dataOriginal
+      .sort(function(a,b) {
+        return d3.ascending(a.key,b.key);
+      });
+
+    changeOcc(dataOrdered[number].key);
+    changeDisplay(settings.startingYear,dataOrdered[number].key);
+
+  }
+
+
+
+  initCombobox();
 
 })  //end of D3
 

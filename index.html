@@ -1,13 +1,17 @@
 <html>
   <head>
     <meta charset='UTF-8'>
+
     <script type="text/javascript" src="js/d3.min.js" charset="utf-8"></script>
     <script type="text/javascript" src='js/jquery.min.js'></script>
     <script type="text/javascript" src="js/jquery-ui-1.10.4.custom.min.js"></script>
+    <script type="text/javascript" src="js/jquery.tooltip.MODIFIED.min.js"></script>
     <script type="text/javascript" src="js/combobox_jquery_ui.js"></script>
     <script type="text/javascript" src='js/underscore.js'></script>
     <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel='stylesheet' type='text/css' href='jquery-ui-1.10.4.custom.min.css'>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script type="text/javascript" src='js/script.js'></script>
     <title>Pocessing Time</title>
   </head>
@@ -33,17 +37,17 @@
     <div id='about'>
       <h5>About the project</h5>
       <p>The H-1B visa is a non-immigrant visa in the U.S. that allows foreign workers to work temporarily in specialty occupations. It is also the visa foreign students get after they get their first job out of American colleges. </p>
-      <p>This interactive tool displays the H-1B visa proceessing time for all occupational categories listed by the U.S. Citizenship and Immigration Services in the past five years. The average proceessing time calculation is based on applications received between Oct 1, 2007 and September 30, 2013.</p>
+      <p>This interactive tool displays the H-1B visa proceessing time for all occupational categories listed by the U.S. Citizenship and Immigration Services in the past five years. The average proceessing time calculation is based on applications received between Oct 1, 2007 and Sep. 30, 2013. The processing time for 2013 is mostly inaccurate as most cases were still under review by Sep. 30.</p>
         <p>The current law limits to 65,000 foreign nationals who may be issued a H-1B visa each fiscal year. Laws also exempt up to 20,000 foreign nationals holding a master's or higher degree from U.S. universitities from the cap on H-1b visas. The United States Citizenship and Immigration Services starts accepting applications on the first business day of April, and the actual visas are issued on the first day of the fiscal year, October 1. A lottery system was used in 2008 (FY2009 quota) and 2013 (FY2013 quota).</p>
     </div>
 
-    <div id='barchart'></div>
+    <div id='barchart'><h5>Wait time in <span class='year-bar'></span> (Days)</h5></div>
 
     <div id='linechart'>
-      <h4>Processing time for <span id='theocc'></span></h4>
+      <h4>Processing time for <span id='theocc2'></span></h4>
     </div>
     <div id='bubblechart'>
-      <h4>Service Center Comparison: Average wait time</h4>
+      <h4>Service Center Comparison (2008-2013): <span id='theocc'></span></h4>
     </div>
   </body>
 

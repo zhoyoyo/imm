@@ -18,7 +18,7 @@ body,html {
   margin:0;
   margin-top:0;
   padding:20px;
-  z-index:9999;
+  z-index:9990;
   position:fixed;
   height:60px;
   background:#F7F5F4;
@@ -27,10 +27,10 @@ body,html {
 #about {
   width:24%;
   float:left;
-  margin-top:100px;
+  margin-top:120px;
   padding-left:30px;
   padding-right:20px;
-  padding-top:20px;
+  border-right:1px dashed #ccc;
 }
 
 
@@ -42,15 +42,15 @@ body,html {
 
 
 #barchart {
-  padding-left:10px;
-  width:38%;
+  padding-left:20px;
+  width:36%;
   overflow:scroll;
   float:left;
   margin-top:100px;
   position:relative;
   z-index:2;
+  padding-top:20px;
 }
-
 
 #linechart {
   font-size:14px;
@@ -58,12 +58,12 @@ body,html {
   border:1px dashed #ccc;
   position:relative;
   float:left;
-  height:300px;
-  width:32%;
-  margin-top:100px;
+  height:280px;
+  width:350px;
+  margin-top:130px;
   z-index:1;
-  padding-left:10px;
   background-color:white;
+  padding:20px;
 }
 
 #bubblechart {
@@ -72,12 +72,12 @@ body,html {
   margin-top:20px;
   position:relative;
   float:left;
-  height:300px;
-  width:32%;
+  height:200px;
+  width:350px;
   z-index:1;
-  margin-left:10px;
   background-color:white;
   border:1px dashed #ccc;
+  padding:20px;
 }
 
 
@@ -125,6 +125,14 @@ h3 {
   padding-top:3px;
 }
 
+h4 {
+  margin:0;
+  padding:0;
+  font-size:14px;
+  font-color:#414042;
+  font-weight:700;
+}
+
 h5 {
   font-size:20px;
   color:#939598;
@@ -136,7 +144,7 @@ h5 {
 #selector {
   float:left;
   height:60px;
-  color:#808080;
+  color:#414042;
   font-size:14px;
 }
 
@@ -161,4 +169,115 @@ h5 {
 
 .years {
   display:inline;
+  margin-left:5px;
 }
+
+.tick text {
+  font-size:12px;
+  fill:#999;
+}
+
+.y .tick line {
+  stroke:#ccc;
+}
+
+
+
+
+
+.ui-helper-hidden-accessible {display:none;}
+
+/* Begin Combobox */
+#selectWrapper {
+	width: 350px;
+}
+
+.custom-combobox-toggle {
+	height: 25px;
+	margin-top: -4px;
+	margin-left: -300px;
+	border:none;
+	background:none;
+	color:#414042;
+
+}
+
+input.custom-combobox-input {
+	color:#414042;
+}
+
+.custom-combobox-input {
+	padding-left: 25px;
+	padding-top: 2px;
+	text-indent: 2px;
+	font-size: 14px;
+	color: #414042;
+	border:none;
+	border-bottom: 1px solid #999;
+}
+
+.ui-widget.ui-widget-content.ui-state-default.ui-corner-left.ui-autocomplete-input {
+	border-radius: 0;
+	width:340px;
+	height:25px;
+	background: transparent;
+}
+
+#ui-id-1 {
+	width:350px;
+	height: 400px;
+	overflow: scroll;
+	position: relative;
+	z-index: 9999;
+	border-radius: 0;
+	border:1px solid #ccc;
+}
+
+.ui-menu .ui-menu-item a{
+font-size:13px;
+border-radius: none;
+border:none;
+}
+
+.ui-menu .ui-menu-item a:hover {
+	font-size:13px;
+	background: #ccc;
+	border:none;
+	border-radius: none;
+}
+
+
+
+.custom-combobox-input:focus {
+	outline: none;
+}
+
+.ui-menu-item {
+	font-size: 14px;
+	color: #414042;
+}
+/* End Combobox */
+
+
+.ui-icon.ui-icon-triangle-1-s {
+  margin-left:-56px;
+}
+
+
+/* Begin Edit placeholder */
+::-webkit-input-placeholder {
+   color: #414042;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color: #414042;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color: #414042;
+}
+
+:-ms-input-placeholder {
+   color: #414042;
+}
+/* End Edit placeholder */

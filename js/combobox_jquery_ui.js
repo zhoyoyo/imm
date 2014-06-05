@@ -4,7 +4,7 @@
  * Adapted from an example. See
  * http://jqueryui.com/autocomplete/#combobox
  *
- * Useage: 
+ * Useage:
  *
  * First, write some HTML...
  * <select id="combobox">
@@ -15,7 +15,7 @@
  *   .
  * </select>
  *
- * Then initialize... 
+ * Then initialize...
  * $( "#combobox" ).combobox();
  *
  */
@@ -38,10 +38,10 @@
 
 	    this.input = $( "<input>" )
 	      .appendTo( this.wrapper )
-	      .val('')
+	      .val(value)
 	      .attr({
       			"title": "",
-      			"placeholder": value
+//      			"placeholder": value
 		  	})
 	      .addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
 	      .autocomplete({
@@ -56,7 +56,7 @@
         // Trying to suppress Enter button triggering submission
 	    this.input.on('keydown', function (e) {
 	      	var code = (e.keyCode ? e.keyCode : e.which);
-		
+
 		    if(code == 13) { //Enter keycode
 		        return false;
 		    }
@@ -71,7 +71,7 @@
 	        });
 
 	        // Clear out input once selection made
-	        $('.custom-combobox-input').val('');
+//	        $('.custom-combobox-input').val('');
 	      },
 
 	      autocompletechange: "_removeIfInvalid"
