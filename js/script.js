@@ -14,10 +14,10 @@ d3.csv('./data.csv',function(csv_data) {
   }
 
   var years = [2008, 2009, 2010, 2011, 2012, 2013];
-  var ayears = ['a2008','a2009','a2010','a2011','a2012','a2013'];
+  var allyears = [2008, 2009, 2010, 2011, 2012, 2013,'All_Years']
   var settings = {
-    startingYear: 2013,
-    startingOcc: "Accountants, Auditors and Related Jobs"
+    startingYear: 'All_Years',
+    startingOcc: " All occupations"
   }
 
 //read and process data
@@ -27,18 +27,48 @@ d3.csv('./data.csv',function(csv_data) {
     .entries(csv_data);
 
   _.each(dataOriginal, function (datum) {
-    _.each(years, function (year) {
+    _.each(allyears, function (year) {
       var xYear = 'X' + year,
           aYear = 'a' + year,
-          value0 = datum.values[0].values[0][xYear],
-          value1 = datum.values[1].values[0][xYear],
-          value0 = parseFloat(value0),
-          value1 = parseFloat(value1);
+          value0,value1,value2,value3;
+      value0 = datum.values[0].values[0][xYear];
+      value1 = datum.values[1].values[0][xYear];
+      value0 = parseFloat(value0);
+      value1 = parseFloat(value1);
 
-      datum[aYear] = (value0 + value1) / 2;
+      var length = datum.values.length;
+
+      if (length==2) {
+        var nozeros = _.filter([value0,value1],function(x) {return x==0;});
+        var numberofzeros = nozeros.length;
+        if (numberofzeros == 2) {datum[aYear] = 0;}
+        else {datum[aYear] = (value0 + value1)/(2-numberofzeros);}
+      }
+
+
+      if (length==3) {
+        value2 = parseFloat(datum.values[2].values[0][xYear]);
+        var nozeros = _.filter([value0,value1,value2],function(x) {return x==0;});
+        var numberofzeros = nozeros.length;
+        if (numberofzeros == 3) {datum[aYear] = 0;}
+        else {datum[aYear] = (value0 + value1 + value2)/(3-numberofzeros);}
+      }
+
+      if (length==4) {
+        value2 = parseFloat(datum.values[2].values[0][xYear]);
+        value3 = parseFloat(datum.values[3].values[0][xYear]);
+        var nozeros = _.filter([value0,value1,value2,value3],function(x) {return x==0;});
+        var numberofzeros = nozeros.length;
+        if (numberofzeros == 4) {datum[aYear] = 0;}
+        else {datum[aYear] = (value0 + value1 + value2 + value3)/(4-numberofzeros);}
+      }
+
+
     });
     datum.keyAbb = datum.key.replace(/\s/g,'');
   });
+
+  console.log(dataOriginal);
 
 ///Draw bar graph
   var svgbars = d3.select('#barchart').append('svg').attr('width','100%').attr('height','5450px');
@@ -298,9 +328,11 @@ var textsnap2 = d3.selectAll('#theocc2').append('svg').attr('width','450px').att
     var numberOfCenters = lineData.values.length;
     var centerData = lineData.values;
     _.each(centerData,function(x) {
-      if (x.values[0].X2013)
-      {x.average = (parseFloat(x.values[0].X2008) + parseFloat(x.values[0].X2009) + parseFloat(x.values[0].X2010) + parseFloat(x.values[0].X2011) + parseFloat(x.values[0].X2012) + parseFloat(x.values[0].X2013))/6;}
-      else {x.average = (parseFloat(x.values[0].X2008) + parseFloat(x.values[0].X2009) + parseFloat(x.values[0].X2010) + parseFloat(x.values[0].X2011) + parseFloat(x.values[0].X2012))/5;}
+      if (x.values[0].X2013 == 0)
+      {
+        x.average = (parseFloat(x.values[0].X2008) + parseFloat(x.values[0].X2009) + parseFloat(x.values[0].X2010) + parseFloat(x.values[0].X2011) + parseFloat(x.values[0].X2012))/5;}
+      else {
+        x.average = (parseFloat(x.values[0].X2008) + parseFloat(x.values[0].X2009) + parseFloat(x.values[0].X2010) + parseFloat(x.values[0].X2011) + parseFloat(x.values[0].X2012) + parseFloat(x.values[0].X2013))/6;}
     })
 
     //add center name
@@ -417,7 +449,7 @@ var textsnap2 = d3.selectAll('#theocc2').append('svg').attr('width','450px').att
 
   var changeDisplay = function(year,occ) {
     var pData = _.where(dataOriginal,{ key:occ })[0];
-    var text = pData['a'+year];
+    var text = Math.round(pData['a'+year]);
     d3.select('div.ptime').text(text+' Days');
   }
 
@@ -432,7 +464,7 @@ var textsnap2 = d3.selectAll('#theocc2').append('svg').attr('width','450px').att
     .append('option')
     .text(function(d) {return d.key;});
 
-  d3.select('select').on('change',function() {
+/*  d3.select('select').on('change',function() {
     var number=this.selectedIndex;
 
     var dataOrdered = dataOriginal
@@ -442,25 +474,26 @@ var textsnap2 = d3.selectAll('#theocc2').append('svg').attr('width','450px').att
 
     changeOcc(dataOrdered[number].key);
     changeDisplay(settings.startingYear,dataOrdered[number].key);
-
   })
 
-
+*/
 
   d3.select("#year-selector").select('.years')
     .selectAll('div')
-    .data(years)
+    .data(allyears)
     .enter().append('div')
-    .style({'width':'50px','height':'20px','display':'inline-block','cursor':'pointer'})
+    .style({'width':'60px','height':'20px','display':'inline-block','cursor':'pointer'})
     .attr('class',function(d) {return 'year '+d; })
-    .text(function(d) {return d;})
+    .text(function(d) {
+      return d == 'All_Years'? "All years" : d;
+    })
     .style('font-size','13px')
     .style('color','#414042')
     .style('background',function(d) {
-      return d == 2013? '#999' : "#F7F5F4";
+      return d == settings.startingYear ? '#999' : "#F7F5F4";
     })
     .style('color',function(d) {
-      return d==2013? 'white' : '#414042';
+      return d== settings.startingYear ? 'white' : '#414042';
     })
     .on('click',function(d) {
       d3.selectAll('.year').style('background','#F7F5F4');
@@ -505,6 +538,7 @@ var textsnap2 = d3.selectAll('#theocc2').append('svg').attr('width','450px').att
 
     changeOcc(dataOrdered[number].key);
     changeDisplay(settings.startingYear,dataOrdered[number].key);
+    $('.custom-combobox-input').val(dataOrdered[number].key);
 
   }
 
