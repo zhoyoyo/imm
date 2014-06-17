@@ -71,8 +71,8 @@ d3.csv('./data.csv',function(csv_data) {
   console.log(dataOriginal);
 
 ///Draw bar graph
-  var svgbars = d3.select('#barchart').append('svg').attr('width','100%').attr('height','5450px');
-  var maxWidth = winW*36/100-40;
+  var svgbars = d3.select('#barchart').append('svg').attr('width','100%').attr('height','5440px');
+  var maxWidth = winW*35/100;
 
 
   var changeYear = function(thisyear) {
@@ -207,7 +207,7 @@ d3.csv('./data.csv',function(csv_data) {
 
 
   /// DRAW LINE CHART
-  var svglines = d3.select('#linechart').append('svg').attr('width','350px').attr('height','240px');
+  var svglines = d3.select('#linechart').append('svg').attr('width','100%').attr('height','240px');
   //add occupation name on the title
   var textsnap = d3.select('#theocc').append('svg').attr('width','450px').attr('height','25px')
     .append('text')
@@ -341,7 +341,7 @@ var textsnap2 = d3.selectAll('#theocc2').append('svg').attr('width','450px').att
     centerName
       .transition().duration(750)
       .attr('x',function(d,i) {
-        return 340/numberOfCenters*i+180/numberOfCenters;
+        return 320/numberOfCenters*i+180/numberOfCenters;
       })
       .text(function(d) {return d.key;});
     centerName
@@ -349,7 +349,7 @@ var textsnap2 = d3.selectAll('#theocc2').append('svg').attr('width','450px').att
       .append('text')
       .attr('class','center-name')
       .attr('x',function(d,i) {
-        return 340/numberOfCenters*i+180/numberOfCenters;
+        return 320/numberOfCenters*i+180/numberOfCenters;
       })
       .attr('y',20)
       .text(function(d) {return d.key;})
@@ -370,7 +370,7 @@ var textsnap2 = d3.selectAll('#theocc2').append('svg').attr('width','450px').att
     waitTime
       .transition().duration(750)
       .attr('x',function(d,i) {
-        return 340/numberOfCenters*i+180/numberOfCenters;
+        return 320/numberOfCenters*i+180/numberOfCenters;
       })
       .text(function(d) {return Math.round(d.average)+' Days';});
     waitTime
@@ -378,7 +378,7 @@ var textsnap2 = d3.selectAll('#theocc2').append('svg').attr('width','450px').att
       .append('text')
       .attr('class','center-ptime')
       .attr('x',function(d,i) {
-        return 340/numberOfCenters*i+180/numberOfCenters;
+        return 320/numberOfCenters*i+180/numberOfCenters;
       })
       .attr('y',40)
       .text(function(d) {return Math.round(d.average)+' Days';})
@@ -397,38 +397,34 @@ var textsnap2 = d3.selectAll('#theocc2').append('svg').attr('width','450px').att
     bubbles
       .transition().duration(750)
       .attr('cx',function(d,i) {
-        return 340/numberOfCenters*i+180/numberOfCenters;
+        return 320/numberOfCenters*i+180/numberOfCenters;
       })
       .attr('r',function(d) {
-        if (numberOfCenters == 2) {return Math.sqrt(d.average)*4;}
-        else if (numberOfCenters == 3) {return Math.sqrt(d.average)*4;}
-        else {return 3*Math.sqrt(d.average);}
+        if (numberOfCenters == 2) {return Math.sqrt(d.average)*3.5;}
+        else if (numberOfCenters == 3) {return Math.sqrt(d.average)*3.5;}
+        else {return 2.8*Math.sqrt(d.average);}
       })
-      .style('fill',function(d) {
+      .style('fill','steelblue'
+       /* function(d) {
         if (d.key=='California S.C.') {return '#F79151';}
         else if (d.key=='Vermont S.C.') {return 'green';}
         else if (d.key=='Nebraska S.C.') {return 'steelblue';}
         else {return '#999999';}
-      });
+      }*/);
     bubbles
       .enter()
       .append('circle')
       .attr('class','center')
       .attr('cx',function(d,i) {
-        return 340/numberOfCenters*i+180/numberOfCenters;
+        return 320/numberOfCenters*i+180/numberOfCenters;
       })
       .attr('cy',100)
       .attr('r',function(d) {
-        if (numberOfCenters == 2) {return Math.sqrt(d.average)*4;}
-        else if (numberOfCenters == 3) {return Math.sqrt(d.average)*4;}
-        else {return 3*Math.sqrt(d.average);}
+        if (numberOfCenters == 2) {return Math.sqrt(d.average)*3.5;}
+        else if (numberOfCenters == 3) {return Math.sqrt(d.average)*3.5;}
+        else {return 2.8*Math.sqrt(d.average);}
       })
-      .style('fill',function(d) {
-        if (d.key=='California S.C.') {return '#F79151';}
-        else if (d.key=='Vermont S.C.') {return 'green';}
-        else if (d.key=='Nebraska S.C.') {return 'steelblue';}
-        else {return '#999999';}
-      })
+      .style('fill','steelblue')
       .style('fill-opacity',1);
 
     bubbles
@@ -482,7 +478,7 @@ var textsnap2 = d3.selectAll('#theocc2').append('svg').attr('width','450px').att
     .selectAll('div')
     .data(allyears)
     .enter().append('div')
-    .style({'width':'60px','height':'20px','display':'inline-block','cursor':'pointer'})
+    .style({'width':'55px','height':'20px','display':'inline-block','cursor':'pointer'})
     .attr('class',function(d) {return 'year '+d; })
     .text(function(d) {
       return d == 'All_Years'? "All years" : d;
@@ -490,13 +486,13 @@ var textsnap2 = d3.selectAll('#theocc2').append('svg').attr('width','450px').att
     .style('font-size','13px')
     .style('color','#414042')
     .style('background',function(d) {
-      return d == settings.startingYear ? '#999' : "#F7F5F4";
+      return d == settings.startingYear ? '#999' : "#ffffff";
     })
     .style('color',function(d) {
       return d== settings.startingYear ? 'white' : '#414042';
     })
     .on('click',function(d) {
-      d3.selectAll('.year').style('background','#F7F5F4');
+      d3.selectAll('.year').style('background','#ffffff');
       d3.selectAll('.year').style('color','#414042');
       d3.select(this).style('background','#999');
       d3.select(this).style('color','white');
